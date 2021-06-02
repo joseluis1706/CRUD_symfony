@@ -3,11 +3,15 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Product
  *
  * @ORM\Table(name="product", indexes={@ORM\Index(name="name", columns={"name"})})
+ * @UniqueEntity("code")
+ * @UniqueEntity("name")
  * @ORM\Entity
  */
 class Product
@@ -24,14 +28,35 @@ class Product
     /**
      * @var string
      *
-     * @ORM\Column(name="code", type="string", length=10, nullable=false)
+     * @ORM\Column(
+     *          name="code",
+     *          type="string",
+     *          length=10,
+     *          nullable=false
+     *          )
+     * @Assert\Size(
+     *      min = "4",
+     *      max = "10",
+     *      minMessage = "Tu nombre debe tener al menos {{ limit }} caracteres",
+     *      maxMessage = "Tu nombre no puede ser mayor a {{ limit }} caracteres"
+     * )
+     * @Assert\NotBlank()
      */
     private $code;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=100, nullable=false)
+     * @ORM\Column(name="name",
+     *          type="string",
+     *          length=100,
+     *          nullable=false
+     *          )
+     * @Assert\Length(
+     *      min = 4,
+     *      minMessage = "Tu nombre debe tener al menos {{ limit }} caracteres"
+     * )
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -39,6 +64,7 @@ class Product
      * @var string
      *
      * @ORM\Column(name="description", type="text", length=65535, nullable=false)
+     * @Assert\NotBlank()
      */
     private $description;
 
@@ -53,6 +79,9 @@ class Product
      * @var float
      *
      * @ORM\Column(name="price", type="float", precision=10, scale=0, nullable=false)
+     * 
+     * 
+     * 
      */
     private $price;
 
